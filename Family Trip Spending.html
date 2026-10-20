@@ -1,0 +1,280 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Family Trip Spending</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one summary band (settlement + KPIs), then a two-column grid of charts, then the full ledger. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#10151c; --ink2:#4b5563; --ink3:#7b8494; --line:#e3e7ee; --grid:#eef1f5;
+  --accent:#2a78d6; --accent-soft:#e6f0fc; --me:#9aa4b2;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s8:#8b94a3;
+  --hero-bg:#10151c; --hero-ink:#f4f6f9; --hero-ink2:#a8b1bf; --hero-accent:#6da7ec;
+  --font-d:'Bricolage Grotesque','DM Sans',system-ui,sans-serif; --font-b:'DM Sans',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1014; --surface:#161a20; --ink:#eef1f5; --ink2:#b3bcc9; --ink3:#8a94a3; --line:#262c35; --grid:#1d222a;
+  --accent:#3987e5; --accent-soft:#16283f; --me:#5b6574;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#7b8494;
+  --hero-bg:#1b2230; --hero-ink:#f4f6f9; --hero-ink2:#a8b1bf; --hero-accent:#6da7ec; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1014; --surface:#161a20; --ink:#eef1f5; --ink2:#b3bcc9; --ink3:#8a94a3; --line:#262c35; --grid:#1d222a;
+  --accent:#3987e5; --accent-soft:#16283f; --me:#5b6574;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#7b8494;
+  --hero-bg:#1b2230; --hero-ink:#f4f6f9; --hero-ink2:#a8b1bf; --hero-accent:#6da7ec; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:14px;line-height:1.5;
+  padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.num{font-variant-numeric:tabular-nums}
+header h1{font-family:var(--font-d);font-size:26px;line-height:1.15;margin:0 0 2px;font-weight:700;text-wrap:balance}
+header p{margin:0;color:var(--ink2)}
+.hero{background:var(--hero-bg);color:var(--hero-ink);border-radius:14px;padding:22px;display:grid;grid-template-columns:1.1fr 1fr;gap:24px}
+.hero .lab{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--hero-ink2)}
+.hero .big{font-family:var(--font-d);font-weight:700;font-size:clamp(40px,8vw,64px);line-height:1;margin:6px 0 10px;color:var(--hero-accent)}
+.hero .sub{color:var(--hero-ink2);max-width:46ch}
+.ledger{width:100%;border-collapse:collapse;font-size:13px}
+.ledger th{font-weight:500;color:var(--hero-ink2);text-align:right;padding:4px 0 8px;font-size:12px}
+.ledger th:first-child,.ledger td:first-child{text-align:left}
+.ledger td{padding:8px 0;border-top:1px solid rgba(255,255,255,.12);text-align:right}
+.ledger tr.t td{font-weight:600;border-top:1px solid rgba(255,255,255,.35)}
+.ledger small{display:block;color:var(--hero-ink2);font-size:11px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi .l{font-size:12px;color:var(--ink2)}
+.kpi .v{font-family:var(--font-d);font-size:24px;font-weight:700;margin-top:2px}
+.kpi .n{font-size:12px;color:var(--ink3)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.card.wide{grid-column:1/-1}
+.card h2{font-family:var(--font-d);font-size:17px;margin:0 0 2px;font-weight:700}
+.card .d{color:var(--ink2);font-size:12.5px;margin:0 0 12px}
+.row{display:grid;grid-template-columns:minmax(96px,150px) 1fr auto;gap:10px;align-items:center;padding:5px 0}
+.row .nm{font-size:13px;min-width:0;overflow-wrap:anywhere}
+.row .tr{height:14px;background:var(--grid);border-radius:3px;position:relative}
+.row .br{height:100%;border-radius:0 4px 4px 0;min-width:2px}
+.row .vl{font-size:13px;text-align:right;white-space:nowrap}
+.row .vl em{font-style:normal;color:var(--ink3);margin-left:6px;font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 10px;font-size:12px;color:var(--ink2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.cols{display:flex;align-items:flex-end;gap:6px;height:190px;padding-top:8px;border-bottom:1px solid var(--line);position:relative}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.col .b{width:100%;max-width:44px;border-radius:4px 4px 0 0;background:var(--accent)}
+.col .b.pre{background:var(--ink3)}
+.col .cv{font-size:10.5px;color:var(--ink2);margin-bottom:3px;white-space:nowrap}
+.xl{display:flex;gap:6px;margin-top:6px}
+.xl span{flex:1;min-width:0;text-align:center;font-size:11px;color:var(--ink3);white-space:nowrap}
+.split{display:flex;height:22px;border-radius:5px;overflow:hidden;gap:2px;margin:6px 0 8px}
+.split div{height:100%}
+.top{list-style:none;margin:0;padding:0}
+.top li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;padding:7px 0;border-top:1px solid var(--line);align-items:baseline}
+.top li:first-child{border-top:0}
+.top .r{color:var(--ink3);font-size:12px}
+.top .s{color:var(--ink3);font-size:12px}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+.ins{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 24px;margin:0;padding:0;list-style:none}
+.ins li{padding-left:12px;border-left:2px solid var(--accent);color:var(--ink2)}
+.ins b{color:var(--ink)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tw{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px}
+table.t th{text-align:left;font-weight:500;color:var(--ink2);padding:6px 8px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+table.t td{padding:6px 8px;border-bottom:1px solid var(--grid)}
+table.t .r{text-align:right}
+.own-Split{color:var(--accent)} .own-Payable{color:var(--s2)} .own-Not{color:var(--ink3)}
+.note{font-size:12.5px;color:var(--ink2);background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:6px;z-index:20;display:none;max-width:240px}
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+  .ins{grid-template-columns:1fr}
+  .row{grid-template-columns:96px 1fr auto}
+}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>Family Trip Spending</h1>
+  <p id="sub"></p>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="lab">Charu owes you</div>
+    <div class="big num" id="owe"></div>
+    <div class="sub" id="oweSub"></div>
+  </div>
+  <table class="ledger num" id="ledger"></table>
+</section>
+
+<section class="kpis" id="kpis"></section>
+
+<div class="grid">
+  <section class="card">
+    <h2>Where the money went</h2>
+    <p class="d">Total spend by category</p>
+    <div id="cats"></div>
+  </section>
+  <section class="card">
+    <h2>Spend by place</h2>
+    <p class="d">Stays and food booked or eaten in each stop. Fuel, the rental car and the train are grouped as trip-wide.</p>
+    <div id="locs"></div>
+  </section>
+  <section class="card wide">
+    <h2>Day by day</h2>
+    <p class="d">Pre-booked costs were paid on 30 Sep. The other bars are spend on the trip dates.</p>
+    <div class="cols" id="days"></div><div class="xl" id="daysx"></div>
+  </section>
+  <section class="card">
+    <h2>Food &amp; drinks</h2>
+    <p class="d" id="foodD"></p>
+    <div id="food"></div>
+  </section>
+  <section class="card">
+    <h2>How it was paid</h2>
+    <p class="d">Payment medium</p>
+    <div id="med"></div>
+    <h2 style="margin-top:18px">Who bears what</h2>
+    <p class="d">Your share against Charu's share of the total</p>
+    <div class="split" id="share"></div>
+    <div class="legend" id="shareL"></div>
+  </section>
+  <section class="card">
+    <h2>Ten biggest expenses</h2>
+    <p class="d">Together they make up <span id="top10p"></span> of the total</p>
+    <ol class="top" id="top"></ol>
+  </section>
+  <section class="card">
+    <h2>What stands out</h2>
+    <p class="d">Pulled from the numbers</p>
+    <ul class="ins" id="ins" style="grid-template-columns:1fr"></ul>
+    <div class="note" id="note" style="margin-top:14px"></div>
+  </section>
+  <section class="card wide">
+    <h2>All 59 entries</h2>
+    <div class="filters">
+      <select id="fc" aria-label="Category"></select>
+      <select id="fo" aria-label="Ownership"></select>
+      <select id="fl" aria-label="Place"></select>
+    </div>
+    <div class="tw"><table class="t num"><thead><tr><th>Date</th><th>Spending</th><th>Category</th><th>Place</th><th>Paid via</th><th>Ownership</th><th class="r">Amount</th><th class="r">Charu owes</th></tr></thead><tbody id="tb"></tbody></table></div>
+    <p class="d" id="tfoot" style="margin:10px 0 0"></p>
+  </section>
+</div>
+</div>
+<div id="tip"></div>
+
+<script>
+const ROWS = [{"n": 1, "date": "2026-10-09", "medium": "CC", "item": "Petrol-1", "amt": 3733.0, "own": "Split", "cat": "Fuel", "loc": "Trip-wide & en route", "charu": 1866.5}, {"n": 2, "date": "2026-10-10", "medium": "CC", "item": "Swiggy - Delhi Hotel Late Night", "amt": 877.0, "own": "Split", "cat": "Food & drinks", "loc": "Delhi", "charu": 438.5}, {"n": 3, "date": "2026-10-10", "medium": "CC", "item": "Petrol-2", "amt": 3901.0, "own": "Split", "cat": "Fuel", "loc": "Trip-wide & en route", "charu": 1950.5}, {"n": 4, "date": "2026-10-10", "medium": "CC", "item": "Amritsar Dinner", "amt": 2392.0, "own": "Split", "cat": "Food & drinks", "loc": "Amritsar", "charu": 1196.0}, {"n": 5, "date": "2026-10-11", "medium": "CC", "item": "Swiggy - Belgian Waffels", "amt": 414.0, "own": "Split", "cat": "Food & drinks", "loc": "Amritsar", "charu": 207.0}, {"n": 6, "date": "2026-10-12", "medium": "CC", "item": "Lunch at Ambala - Jain Rest", "amt": 1739.0, "own": "Split", "cat": "Food & drinks", "loc": "Trip-wide & en route", "charu": 869.5}, {"n": 7, "date": "2026-10-13", "medium": "CC", "item": "Rishikesh Dinner - Moti Mahal - 1", "amt": 1208.0, "own": "Split", "cat": "Food & drinks", "loc": "Rishikesh & Devprayag", "charu": 604.0}, {"n": 8, "date": "2026-10-13", "medium": "CC", "item": "Rishikesh Dinner - Moti Mahal - 2", "amt": 1446.0, "own": "Not Payable", "cat": "Food & drinks", "loc": "Rishikesh & Devprayag", "charu": 0.0}, {"n": 9, "date": "2026-10-14", "medium": "CC", "item": "Devprayag Lunch", "amt": 2448.0, "own": "Split", "cat": "Food & drinks", "loc": "Rishikesh & Devprayag", "charu": 1224.0}, {"n": 10, "date": "2026-10-14", "medium": "CC", "item": "Petrol After Devprayag - Declined", "amt": 3712.0, "own": "Split", "cat": "Fuel", "loc": "Trip-wide & en route", "charu": 1856.0}, {"n": 11, "date": "2026-10-16", "medium": "CC", "item": "Dalai Hills Cafe", "amt": 734.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 367.0}, {"n": 12, "date": "2026-10-16", "medium": "CC", "item": "George Peak Cafe", "amt": 606.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 303.0}, {"n": 13, "date": "2026-10-16", "medium": "CC", "item": "Mall Road Dinner", "amt": 2099.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 1049.5}, {"n": 14, "date": "2026-10-17", "medium": "CC", "item": "Landour Bakehouse", "amt": 715.0, "own": "Not Payable", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 0.0}, {"n": 15, "date": "2026-10-17", "medium": "CC", "item": "Haldiram", "amt": 2207.0, "own": "Split", "cat": "Food & drinks", "loc": "Trip-wide & en route", "charu": 1103.5}, {"n": 16, "date": "2026-10-17", "medium": "CC", "item": "Rabies Injection", "amt": 400.0, "own": "Payable", "cat": "Other", "loc": "Trip-wide & en route", "charu": 400.0}, {"n": 17, "date": "2026-10-17", "medium": "UPI SBI", "item": "Rabies Suiya", "amt": 150.0, "own": "Payable", "cat": "Other", "loc": "Trip-wide & en route", "charu": 150.0}, {"n": 18, "date": "2026-10-17", "medium": "CC", "item": "Momos Pure Veg", "amt": 541.0, "own": "Not Payable", "cat": "Food & drinks", "loc": "Trip-wide & en route", "charu": 0.0}, {"n": 19, "date": "2026-10-18", "medium": "CC", "item": "Petrol-4", "amt": 600.0, "own": "Split", "cat": "Fuel", "loc": "Trip-wide & en route", "charu": 300.0}, {"n": 20, "date": "2026-10-18", "medium": "CC", "item": "Qutab Lunch", "amt": 2275.0, "own": "Split", "cat": "Food & drinks", "loc": "Delhi", "charu": 1137.5}, {"n": 21, "date": "2026-10-18", "medium": "CC", "item": "Momos Pure Veg", "amt": 188.0, "own": "Not Payable", "cat": "Food & drinks", "loc": "Delhi", "charu": 0.0}, {"n": 22, "date": "2026-10-16", "medium": "Cash", "item": "Kepty Falls", "amt": 500.0, "own": "Split", "cat": "Sightseeing", "loc": "Mussoorie", "charu": 250.0}, {"n": 23, "date": "2026-10-09", "medium": "UPI SBI", "item": "ANVT Parking", "amt": 200.0, "own": "Split", "cat": "Local transport & parking", "loc": "Delhi", "charu": 100.0}, {"n": 24, "date": "2026-10-10", "medium": "UPI SBI", "item": "Delhi Hotel Food", "amt": 1360.0, "own": "Split", "cat": "Food & drinks", "loc": "Delhi", "charu": 680.0}, {"n": 25, "date": "2026-10-10", "medium": "UPI SBI", "item": "Delhi Hotel - Extra Person Charge", "amt": 500.0, "own": "Not Payable", "cat": "Stay", "loc": "Delhi", "charu": 0.0}, {"n": 26, "date": "2026-10-10", "medium": "UPI SBI", "item": "Murthal Dhaba - Amrik Sukhdev", "amt": 870.0, "own": "Split", "cat": "Food & drinks", "loc": "Trip-wide & en route", "charu": 435.0}, {"n": 27, "date": "2026-10-10", "medium": "UPI SBI", "item": "Aestheic Restaurant Before Amritsar", "amt": 345.0, "own": "Split", "cat": "Food & drinks", "loc": "Trip-wide & en route", "charu": 172.5}, {"n": 28, "date": "2026-10-11", "medium": "UPI SBI", "item": "Sabzi Wala Truck", "amt": 140.0, "own": "Split", "cat": "Food & drinks", "loc": "Amritsar", "charu": 70.0}, {"n": 29, "date": "2026-10-11", "medium": "UPI SBI", "item": "Golden Temple Parking", "amt": 30.0, "own": "Split", "cat": "Local transport & parking", "loc": "Amritsar", "charu": 15.0}, {"n": 30, "date": "2026-10-11", "medium": "UPI SBI", "item": "Dinner - Kale Da Dhaba", "amt": 876.0, "own": "Split", "cat": "Food & drinks", "loc": "Amritsar", "charu": 438.0}, {"n": 31, "date": "2026-10-12", "medium": "UPI ICICI", "item": "Petrol-3", "amt": 3421.0, "own": "Split", "cat": "Fuel", "loc": "Trip-wide & en route", "charu": 1710.5}, {"n": 32, "date": "2026-10-12", "medium": "UPI SBI", "item": "Haridwar Best Lassi", "amt": 70.0, "own": "Split", "cat": "Food & drinks", "loc": "Haridwar", "charu": 35.0}, {"n": 33, "date": "2026-10-13", "medium": "UPI SBI", "item": "Mansa Devi Ropeway", "amt": 900.0, "own": "Split", "cat": "Sightseeing", "loc": "Haridwar", "charu": 450.0}, {"n": 34, "date": "2026-10-13", "medium": "UPI SBI", "item": "Haridwar Chaat and Kulfi", "amt": 170.0, "own": "Split", "cat": "Food & drinks", "loc": "Haridwar", "charu": 85.0}, {"n": 35, "date": "2026-10-13", "medium": "UPI SBI", "item": "Janki Jhula Coffee/Tea", "amt": 580.0, "own": "Not Payable", "cat": "Food & drinks", "loc": "Rishikesh & Devprayag", "charu": 0.0}, {"n": 36, "date": "2026-10-13", "medium": "UPI SBI", "item": "Devprayag Nimbupani", "amt": 120.0, "own": "Split", "cat": "Food & drinks", "loc": "Rishikesh & Devprayag", "charu": 60.0}, {"n": 37, "date": "2026-10-15", "medium": "UPI SBI", "item": "Mussoorie Inroute Momos++", "amt": 500.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 250.0}, {"n": 38, "date": "2026-10-15", "medium": "UPI SBI", "item": "Momos Mall Road", "amt": 240.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 120.0}, {"n": 39, "date": "2026-10-15", "medium": "UPI SBI", "item": "Groceries - Maggie++", "amt": 280.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 140.0}, {"n": 40, "date": "2026-10-15", "medium": "UPI SBI", "item": "Mall Road Dinner", "amt": 1429.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 714.5}, {"n": 41, "date": "2026-10-15", "medium": "UPI ICICI", "item": "Mall Road Cab", "amt": 1200.0, "own": "Split", "cat": "Local transport & parking", "loc": "Mussoorie", "charu": 600.0}, {"n": 42, "date": "2026-10-16", "medium": "UPI SBI", "item": "Brunch Before Kempty", "amt": 1560.0, "own": "Split", "cat": "Food & drinks", "loc": "Mussoorie", "charu": 780.0}, {"n": 43, "date": "2026-10-16", "medium": "UPI SBI", "item": "Scooty", "amt": 600.0, "own": "Split", "cat": "Local transport & parking", "loc": "Mussoorie", "charu": 300.0}, {"n": 44, "date": "2026-10-16", "medium": "UPI SBI", "item": "Mall Road Misc", "amt": 130.0, "own": "Split", "cat": "Other", "loc": "Mussoorie", "charu": 65.0}, {"n": 45, "date": "2026-10-17", "medium": "UPI SBI", "item": "Delhi Juice Chhatarpur", "amt": 110.0, "own": "Split", "cat": "Food & drinks", "loc": "Delhi", "charu": 55.0}, {"n": 46, "date": "2026-10-18", "medium": "UPI SBI", "item": "Qutab Parking", "amt": 40.0, "own": "Split", "cat": "Local transport & parking", "loc": "Delhi", "charu": 20.0}, {"n": 47, "date": "2026-10-18", "medium": "Cash", "item": "Akshardham Food", "amt": 600.0, "own": "Split", "cat": "Food & drinks", "loc": "Delhi", "charu": 300.0}, {"n": 48, "date": "2026-10-18", "medium": "UPI SBI", "item": "Akshardham Parking", "amt": 70.0, "own": "Split", "cat": "Local transport & parking", "loc": "Delhi", "charu": 35.0}, {"n": 49, "date": "2026-10-18", "medium": "UPI SBI", "item": "Challan Overspeeding", "amt": 1000.0, "own": "Not Payable", "cat": "Other", "loc": "Trip-wide & en route", "charu": 0.0}, {"n": 50, "date": "2026-10-18", "medium": "UPI SBI", "item": "Zoom Car Extra", "amt": 550.0, "own": "Split", "cat": "Car rental", "loc": "Trip-wide & en route", "charu": 275.0}, {"n": 51, "date": "2026-10-19", "medium": "UPI SBI", "item": "Cab to NDLS", "amt": 700.0, "own": "Split", "cat": "Local transport & parking", "loc": "Delhi", "charu": 350.0}, {"n": 52, "date": "2026-09-30", "medium": "CC", "item": "Return Train - 3 Person", "amt": 7477.0, "own": "Payable", "cat": "Train", "loc": "Trip-wide & en route", "charu": 7477.0}, {"n": 53, "date": "2026-09-30", "medium": "CC", "item": "Amritsar BNB", "amt": 7350.0, "own": "Split", "cat": "Stay", "loc": "Amritsar", "charu": 3675.0}, {"n": 54, "date": "2026-09-30", "medium": "CC", "item": "Haridwar BNB", "amt": 4415.0, "own": "Split", "cat": "Stay", "loc": "Haridwar", "charu": 2207.5}, {"n": 55, "date": "2026-09-30", "medium": "CC", "item": "Rishikesh BNB", "amt": 10554.0, "own": "Split", "cat": "Stay", "loc": "Rishikesh & Devprayag", "charu": 5277.0}, {"n": 56, "date": "2026-09-30", "medium": "CC", "item": "Mussoorie Resort", "amt": 6846.0, "own": "Split", "cat": "Stay", "loc": "Mussoorie", "charu": 3423.0}, {"n": 57, "date": "2026-09-30", "medium": "CC", "item": "Delhi First Hotel", "amt": 4782.0, "own": "Split", "cat": "Stay", "loc": "Delhi", "charu": 2391.0}, {"n": 58, "date": "2026-09-30", "medium": "CC", "item": "Zoom Car", "amt": 26010.0, "own": "Split", "cat": "Car rental", "loc": "Trip-wide & en route", "charu": 13005.0}, {"n": 59, "date": "2026-09-30", "medium": "CC", "item": "Delhi Return BNB", "amt": 5269.0, "own": "Split", "cat": "Stay", "loc": "Delhi", "charu": 2634.5}];
+const CATC = {'Stay':'--s1','Car rental':'--s2','Fuel':'--s3','Food & drinks':'--s4','Train':'--s5','Local transport & parking':'--s6','Sightseeing':'--s7','Other':'--s8'};
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const sum = (a,f)=>a.reduce((x,o)=>x+f(o),0);
+const grp = (a,k)=>{const m={};a.forEach(o=>{m[o[k]]=(m[o[k]]||0)+o.amt});return Object.entries(m).sort((x,y)=>y[1]-x[1])};
+const fd = s => new Date(s+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+const $ = id => document.getElementById(id);
+const total = sum(ROWS,o=>o.amt);
+const owe = sum(ROWS,o=>o.charu);
+const ownBy = k => ROWS.filter(o=>o.own===k);
+const split = sum(ownBy('Split'),o=>o.amt), pay = sum(ownBy('Payable'),o=>o.amt), np = sum(ownBy('Not Payable'),o=>o.amt);
+const myShare = total-owe;
+const dates = [...new Set(ROWS.map(o=>o.date))].sort();
+const pre = dates[0];
+const tripDates = dates.filter(d=>d!==pre);
+const preAmt = sum(ROWS.filter(o=>o.date===pre),o=>o.amt);
+const tripAmt = total-preAmt;
+const nDays = 11;
+
+$('sub').textContent = `${fd(tripDates[0])} to ${fd(tripDates[tripDates.length-1])} 2026 · Delhi, Amritsar, Haridwar, Rishikesh, Mussoorie · ${ROWS.length} entries, all paid by you`;
+$('owe').textContent = inr(owe);
+$('oweSub').textContent = `Half of every split expense plus the full amount of items marked Payable, out of ${inr(total)} spent in total.`;
+$('ledger').innerHTML = `
+<tr><th>Ownership</th><th>Entries</th><th>Amount</th><th>Charu owes</th></tr>
+<tr><td>Split<small>50 / 50</small></td><td>${ownBy('Split').length}</td><td>${inr(split)}</td><td>${inr(split/2)}</td></tr>
+<tr><td>Payable<small>Charu pays 100%</small></td><td>${ownBy('Payable').length}</td><td>${inr(pay)}</td><td>${inr(pay)}</td></tr>
+<tr><td>Not Payable<small>You pay 100%</small></td><td>${ownBy('Not Payable').length}</td><td>${inr(np)}</td><td>${inr(0)}</td></tr>
+<tr class="t"><td>Total</td><td>${ROWS.length}</td><td>${inr(total)}</td><td>${inr(owe)}</td></tr>`;
+
+const cats = grp(ROWS,'cat');
+const food = ROWS.filter(o=>o.cat==='Food & drinks');
+const foodT = sum(food,o=>o.amt);
+const busiest = dates.map(d=>[d,sum(ROWS.filter(o=>o.date===d),o=>o.amt)]).filter(x=>x[0]!==pre).sort((a,b)=>b[1]-a[1])[0];
+$('kpis').innerHTML = [
+ ['Total spend',inr(total),`${inr(total/2)} each if split evenly`],
+ ['Your share',inr(myShare),`${Math.round(myShare/total*100)}% of the total`],
+ ['Booked in advance',inr(preAmt),`${Math.round(preAmt/total*100)}% of the total, paid 30 Sep`],
+ ['On-trip spend per day',inr(tripAmt/nDays),`${inr(tripAmt)} over ${nDays} days`]
+].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v num">${k[1]}</div><div class="n">${k[2]}</div></div>`).join('');
+
+function bars(el, list, colorFn, denom){
+  const max = list[0][1];
+  $(el).innerHTML = list.map(([n,v])=>`<div class="row" data-tip="${n}: ${inr(v)} (${(v/denom*100).toFixed(1)}%)">
+    <div class="nm">${n}</div><div class="tr"><div class="br" style="width:${v/max*100}%;background:${colorFn(n)}"></div></div>
+    <div class="vl num">${inr(v)}<em>${(v/denom*100).toFixed(0)}%</em></div></div>`).join('');
+}
+bars('cats', cats, n=>`var(${CATC[n]})`, total);
+bars('locs', grp(ROWS,'loc'), ()=>'var(--accent)', total);
+bars('med', grp(ROWS,'medium'), ()=>'var(--accent)', total);
+
+// food
+const foodTop = food.slice().sort((a,b)=>b.amt-a.amt).slice(0,6).map(o=>[o.item,o.amt]);
+$('foodD').textContent = `${inr(foodT)} across ${food.length} meals and snacks, ${Math.round(foodT/total*100)}% of the total. Average ${inr(foodT/food.length)} per entry. Biggest six:`;
+bars('food', foodTop, ()=>'var(--s4)', foodT);
+
+// days
+const dayList = [[pre,preAmt,true], ...tripDates.map(d=>[d,sum(ROWS.filter(o=>o.date===d),o=>o.amt),false])];
+const dmax = Math.max(...tripDates.map(d=>sum(ROWS.filter(o=>o.date===d),o=>o.amt)));
+const hi = 150; const scaleMax = Math.max(dmax, preAmt);
+$('days').innerHTML = dayList.map(([d,v,p])=>`<div class="col" data-tip="${p?'Pre-booked, paid ':''}${fd(d)}: ${inr(v)}">
+  <div class="cv num">${(v/1000).toFixed(1)}k</div><div class="b ${p?'pre':''}" style="height:${v/scaleMax*hi}px"></div></div>`).join('');
+$('daysx').innerHTML = dayList.map(([d,v,p])=>`<span>${p?'Booked':fd(d).replace(' Oct','')}</span>`).join('');
+
+// share
+$('share').innerHTML = `<div style="width:${myShare/total*100}%;background:var(--me)"></div><div style="width:${owe/total*100}%;background:var(--accent)"></div>`;
+$('shareL').innerHTML = `<span><i style="background:var(--me)"></i>You ${inr(myShare)}</span><span><i style="background:var(--accent)"></i>Charu ${inr(owe)}</span>`;
+
+// top 10
+const t10 = ROWS.slice().sort((a,b)=>b.amt-a.amt).slice(0,10);
+$('top10p').textContent = Math.round(sum(t10,o=>o.amt)/total*100)+'%';
+$('top').innerHTML = t10.map((o,i)=>`<li><span class="r num">${i+1}</span><span>${o.item}<div class="s">${o.cat} · ${o.own}</div></span><b class="num">${inr(o.amt)}</b></li>`).join('');
+
+// insights
+const stay = cats.find(c=>c[0]==='Stay')[1], car = cats.find(c=>c[0]==='Car rental')[1], fuel = cats.find(c=>c[0]==='Fuel')[1], tr = cats.find(c=>c[0]==='Train')[1];
+const getting = car+fuel+tr;
+const dec = ROWS.find(o=>o.item.includes('Declined'));
+$('ins').innerHTML = [
+ `<b>Stay was the biggest cost</b>: ${inr(stay)}, or ${Math.round(stay/total*100)}% of the trip.`,
+ `<b>Getting around</b> (rental car, fuel, train) came to ${inr(getting)}, ${Math.round(getting/total*100)}% of the total. Add parking and cabs and it is ${inr(getting+2840)}.`,
+ `<b>Food and drinks</b> were ${Math.round(foodT/total*100)}% of spend, about ${inr(foodT/nDays)} a day over ${nDays} days.`,
+ `<b>Busiest day</b> on the road was ${fd(busiest[0])} at ${inr(busiest[1])}.`,
+ `<b>${Math.round(split/total*100)}% of spend was split</b>. Only ${inr(pay)} was fully on Charu and ${inr(np)} fully on you.`,
+ `<b>${Math.round(sum(ROWS.filter(o=>o.medium==='CC'),o=>o.amt)/total*100)}%</b> went on the credit card, ${Math.round(sum(ROWS.filter(o=>o.medium.startsWith('UPI')),o=>o.amt)/total*100)}% on UPI and ${Math.round(sum(ROWS.filter(o=>o.medium==='Cash'),o=>o.amt)/total*100)}% in cash.`
+].map(t=>`<li>${t}</li>`).join('');
+$('note').innerHTML = `<b>Check one entry.</b> Row ${dec.n}, "${dec.item}" (${inr(dec.amt)}), has "Declined" in its name. If that payment never went through, remove it: the total drops to ${inr(total-dec.amt)} and Charu owes ${inr(owe-dec.amt/2)}.`;
+
+// table
+function opts(id,label,vals){ $(id).innerHTML = `<option value="">${label}</option>`+vals.map(v=>`<option>${v}</option>`).join('') }
+opts('fc','All categories',cats.map(c=>c[0]));
+opts('fo','All ownership',['Split','Payable','Not Payable']);
+opts('fl','All places',grp(ROWS,'loc').map(c=>c[0]));
+function draw(){
+  const c=$('fc').value,o=$('fo').value,l=$('fl').value;
+  const rs = ROWS.filter(r=>(!c||r.cat===c)&&(!o||r.own===o)&&(!l||r.loc===l)).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:a.n-b.n);
+  $('tb').innerHTML = rs.map(r=>`<tr><td>${fd(r.date)}</td><td>${r.item}</td><td>${r.cat}</td><td>${r.loc}</td><td>${r.medium}</td><td class="own-${r.own.split(' ')[0]}">${r.own}</td><td class="r">${inr(r.amt)}</td><td class="r">${inr(r.charu)}</td></tr>`).join('');
+  $('tfoot').textContent = `${rs.length} entries · ${inr(sum(rs,r=>r.amt))} spent · Charu owes ${inr(sum(rs,r=>r.charu))}`;
+}
+['fc','fo','fl'].forEach(i=>$(i).addEventListener('change',draw)); draw();
+
+// tooltip
+const tip=$('tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest&&e.target.closest('[data-tip]');
+  if(!t){tip.style.display='none';return}
+  tip.textContent=t.dataset.tip; tip.style.display='block';
+  tip.style.left=Math.min(e.clientX+12,innerWidth-250)+'px'; tip.style.top=(e.clientY+14)+'px';
+});
+</script>
+
+</body></html>
